@@ -286,12 +286,14 @@ typedef struct RGNDATA {
 #define DECLARE_INTERFACE(x)     struct x
 #define DECLARE_INTERFACE_(x, y) struct x : public y
 #else
+//the const below was causing massive spam on gcc
+//warning: useless type qualifier in empty declaration
 #define DECLARE_INTERFACE(x) \
     typedef interface x { \
         const struct x##Vtbl *lpVtbl; \
     } x; \
     typedef const struct x##Vtbl x##Vtbl; \
-    const struct x##Vtbl
+    /*const*/ struct x##Vtbl
 #define DECLARE_INTERFACE_(x, y) DECLARE_INTERFACE(x)
 #endif // __cplusplus
 
