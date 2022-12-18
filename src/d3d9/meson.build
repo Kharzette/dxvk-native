@@ -41,7 +41,14 @@ d3d9_src = [
   'd3d9_hud.cpp'
 ]
 
-d3d9_dll = shared_library(so_prefix+'d3d9'+dll_ext, d3d9_src, glsl_generator.process(d3d9_shaders), d3d9_res,
+d3d9_dll = static_library('libdxvk_d3d9', d3d9_src, glsl_generator.process(d3d9_shaders), d3d9_res,
+  name_prefix         : '',
+  dependencies        : [ dxso_dep, dxvk_dep, wsi_dep ],
+  include_directories : dxvk_include_path,
+  install             : true,
+  override_options    : ['cpp_std='+dxvk_cpp_std])
+
+d3d9_dll = shared_library('libdxvk_d3d9', d3d9_src, glsl_generator.process(d3d9_shaders), d3d9_res,
   name_prefix         : '',
   dependencies        : [ dxso_dep, dxvk_dep, wsi_dep ],
   include_directories : dxvk_include_path,

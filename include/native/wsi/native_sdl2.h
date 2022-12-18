@@ -1,7 +1,11 @@
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include  <stdint.h>
+#endif
 #include <windows.h>
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 namespace dxvk::wsi {
 

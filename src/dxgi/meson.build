@@ -12,7 +12,14 @@ dxgi_src = [
   'dxgi_swapchain.cpp',
 ]
 
-dxgi_dll = shared_library(so_prefix+'dxgi'+dll_ext, dxgi_src, dxgi_res,
+dxgi_dll = static_library('libdxvk_dxgi', dxgi_src, dxgi_res,
+  name_prefix         : '',
+  dependencies        : [ dxvk_dep, wsi_dep ],
+  include_directories : dxvk_include_path,
+  install             : true,
+  override_options    : ['cpp_std='+dxvk_cpp_std])
+
+dxgi_dll = shared_library('libdxvk_dxgi', dxgi_src, dxgi_res,
   name_prefix         : '',
   dependencies        : [ dxvk_dep, wsi_dep ],
   include_directories : dxvk_include_path,

@@ -24,6 +24,7 @@ shift 2
 opt_nopackage=0
 opt_devbuild=0
 opt_buildid=false
+enable_tests=false
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -52,7 +53,7 @@ function build_arch {
     opt_strip=--strip
   fi
 
-  meson --buildtype "release"                         \
+  meson --buildtype "debug"                         \
         --prefix "$DXVK_BUILD_DIR"                    \
         $opt_strip                                    \
         -Denable_tests=true                           \
