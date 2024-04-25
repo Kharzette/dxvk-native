@@ -63,7 +63,7 @@ dxvk_extradep = [ ]
 dxvk_platform = 'windows'
 dxvk_wsi      = 'win32'
 so_prefix     = 'dxvk_'
-SDL_lib_path  = '/media/kharzette/Zeû_Pater/Code/Gits/GrogLibsC/SDL/build'
+SDL_lib_path  = '/mnt/SkyFather/Code/Gits/GrogLibsC/SDL/build'
 
 if not dxvk_native
   if dxvk_compiler.get_id() == 'msvc'
