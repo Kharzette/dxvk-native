@@ -21,13 +21,13 @@ namespace dxvk::wsi {
   }
 
 
-  static inline void convertMode(const SDL_DisplayMode& mode, WsiMode* pMode) {
-    pMode->width          = uint32_t(mode.w);
-    pMode->height         = uint32_t(mode.h);
-    pMode->refreshRate    = WsiRational{ uint32_t(mode.refresh_rate) * 1000, 1000 }; 
+  static inline void convertMode(const SDL_DisplayMode *pSDLMode, WsiMode* pMode) {
+    pMode->width          = uint32_t(pSDLMode->w);
+    pMode->height         = uint32_t(pSDLMode->h);
+    pMode->refreshRate    = WsiRational{ uint32_t(pSDLMode->refresh_rate) * 1000, 1000 }; 
     // BPP should always be a power of two
     // to match Windows behaviour of including padding.
-    pMode->bitsPerPixel   = roundToNextPow2(SDL_BITSPERPIXEL(mode.format));
+    pMode->bitsPerPixel   = roundToNextPow2(SDL_BITSPERPIXEL(pSDLMode->format));
     pMode->interlaced     = false;
   }
 
@@ -41,11 +41,14 @@ namespace dxvk::wsi {
     if (!isDisplayValid(displayId))
       return false;
 
-    SDL_DisplayMode mode = { };
-    if (SDL_GetDisplayMode(displayId, ModeNumber, &mode) != 0)
-      return false;
+    int numModes;
+    const SDL_DisplayMode **pModes  =SDL_GetFullscreenDisplayModes(displayId, &numModes);
+    if(pModes == NULL)
+    {
+      return  false;
+    }
 
-    convertMode(mode, pMode);
+    convertMode(pModes[ModeNumber], pMode);
 
     return true;
   }
@@ -59,13 +62,14 @@ namespace dxvk::wsi {
     if (!isDisplayValid(displayId))
       return false;
 
-    SDL_DisplayMode mode = { };
-    if (SDL_GetCurrentDisplayMode(displayId, &mode) != 0) {
+    const SDL_DisplayMode *pDMode =SDL_GetCurrentDisplayMode(displayId);
+    if(pDMode == NULL)
+    {
       Logger::err(str::format("SDL_GetCurrentDisplayMode: ", SDL_GetError()));
       return false;
     }
 
-    convertMode(mode, pMode);
+    convertMode(pDMode, pMode);
 
     return true;
   }
@@ -79,13 +83,14 @@ namespace dxvk::wsi {
     if (!isDisplayValid(displayId))
       return false;
 
-    SDL_DisplayMode mode = { };
-    if (SDL_GetDesktopDisplayMode(displayId, &mode) != 0) {
+    const SDL_DisplayMode *pDDMode  =SDL_GetDesktopDisplayMode(displayId);
+    if(pDDMode == NULL)
+    {
       Logger::err(str::format("SDL_GetCurrentDisplayMode: ", SDL_GetError()));
       return false;
     }
 
-    convertMode(mode, pMode);
+    convertMode(pDDMode, pMode);
 
     return true;
   }

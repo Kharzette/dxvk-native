@@ -63,7 +63,8 @@ dxvk_extradep = [ ]
 dxvk_platform = 'windows'
 dxvk_wsi      = 'win32'
 so_prefix     = 'dxvk_'
-SDL_lib_path  = '/mnt/SkyFather/Code/Gits/GrogLibsC/SDL/build'
+src_dir       = meson.current_source_dir()
+SDL_lib_path  = join_paths(src_dir, '../SDL/build')
 
 if not dxvk_native
   if dxvk_compiler.get_id() == 'msvc'
@@ -137,7 +138,7 @@ else
   if dxvk_platform == 'windows'
     dxvk_include_path = include_directories('./include', './include/native/', '../SDL/include')
     lib_vulkan  = dxvk_compiler.find_library('vulkan-1', dirs : dxvk_library_path)
-    lib_sdl2    = dxvk_compiler.find_library('SDL3', dirs : SDL_lib_path)
+    lib_sdl3    = dxvk_compiler.find_library('SDL3', dirs : SDL_lib_path)
     wrc = find_program('rc')
   else
 #    add_global_link_arguments('-static', '-static-libgcc', language: 'c')
@@ -146,7 +147,7 @@ else
     SDL_include_path = include_directories('../SDL/include')
     lib_vulkan  = dxvk_compiler.find_library('vulkan')
 #    lib_sdl2    = dxvk_compiler.find_library('SDL3', dirs : SDL_lib_path, static : true)
-    lib_sdl2    = dxvk_compiler.find_library('SDL3', dirs : SDL_lib_path)
+    lib_sdl3    = dxvk_compiler.find_library('SDL3', dirs : SDL_lib_path)
     wrc = find_program('echo')
     so_prefix = 'libdxvk_'
   endif

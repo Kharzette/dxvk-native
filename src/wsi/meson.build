@@ -17,7 +17,7 @@ if dxvk_wsi == 'win32'
   wsi_deps = []
 elif dxvk_wsi == 'sdl2'
   wsi_src  = wsi_sdl2_src
-  wsi_deps = [ lib_sdl2 ]
+  wsi_deps = [ lib_sdl3 ]
 else
   error('Unknown wsi')
 endif

@@ -8,9 +8,18 @@
 namespace dxvk {
 
   inline bool isDisplayValid(int32_t displayId) {
-    const int32_t displayCount = SDL_GetNumVideoDisplays();
+    int displayCount;
+    SDL_DisplayID *pDID =SDL_GetDisplays(&displayCount);
+    if(pDID == NULL)
+    {
+      return  false;
+    }
 
-    return displayId < displayCount && displayId >= 0;
+    bool  bGood =(displayId < displayCount && displayId >= 0);
+
+    SDL_free(pDID);
+
+    return  bGood;
   }
   
 }

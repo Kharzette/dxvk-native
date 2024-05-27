@@ -49,21 +49,17 @@ namespace dxvk::wsi {
     if (!isDisplayValid(displayId))
       return false;
 
-    SDL_DisplayMode wantedMode = { };
-    wantedMode.w            = pMode->width;
-    wantedMode.h            = pMode->height;
-    wantedMode.refresh_rate = pMode->refreshRate.numerator != 0
-      ? pMode->refreshRate.numerator / pMode->refreshRate.denominator
-      : 0;
     // TODO: Implement lookup format for bitsPerPixel here.
 
-    SDL_DisplayMode mode = { };
-    if (SDL_GetClosestDisplayMode(displayId, &wantedMode, &mode) == nullptr) {
+    const SDL_DisplayMode *pCMode =SDL_GetClosestFullscreenDisplayMode(displayId, pMode->width, pMode->height,
+          pMode->refreshRate.numerator / pMode->refreshRate.denominator, false);
+          
+    if(pCMode == NULL) {
       Logger::err(str::format("SDL2 WSI: setWindowMode: SDL_GetClosestDisplayMode: ", SDL_GetError()));
       return false;
     }
 
-    if (SDL_SetWindowDisplayMode(window, &mode) != 0) {
+    if (SDL_SetWindowFullscreenMode(window, pCMode) != 0) {
       Logger::err(str::format("SDL2 WSI: setWindowMode: SDL_SetWindowDisplayMode: ", SDL_GetError()));
       return false;
     }
@@ -84,13 +80,12 @@ namespace dxvk::wsi {
     if (!isDisplayValid(displayId))
       return false;
 
-    uint32_t flags = ModeSwitch
-        ? SDL_WINDOW_FULLSCREEN
-        : SDL_WINDOW_FULLSCREEN_DESKTOP;
-    
+    //this will return null if windowed fullscreen is used
+    const SDL_DisplayMode *pDM  =SDL_GetWindowFullscreenMode(window);
+
     // TODO: Set this on the correct monitor.
     // Docs aren't clear on this...
-    if (SDL_SetWindowFullscreen(window, flags) != 0) {
+    if (SDL_SetWindowFullscreen(window, (pDM != NULL) ) != 0) {
       Logger::err(str::format("SDL2 WSI: enterFullscreenMode: SDL_SetWindowFullscreen: ", SDL_GetError()));
       return false;
     }
@@ -121,7 +116,7 @@ namespace dxvk::wsi {
 
   HMONITOR getWindowMonitor(HWND hWindow) {
     SDL_Window* window      = fromHwnd(hWindow);
-    const int32_t displayId = SDL_GetWindowDisplayIndex(window);
+    const int32_t displayId = SDL_GetDisplayForWindow(window);
 
     return toHmonitor(displayId);
   }
