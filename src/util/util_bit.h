@@ -298,9 +298,12 @@ namespace dxvk::bit {
 
   public:
 
-    class iterator: public std::iterator<std::input_iterator_tag,
-      uint32_t, uint32_t, const uint32_t*, uint32_t> {
+    class iterator {
     public:
+      using value_type        =uint32_t;
+      using pointer           =const uint32_t*;
+      using reference         =uint32_t;
+      using iterator_category =std::forward_iterator_tag;
 
       explicit iterator(uint32_t flags)
         : m_mask(flags) { }
