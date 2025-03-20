@@ -42,7 +42,7 @@ namespace dxvk::wsi {
       return false;
 
     int numModes;
-    const SDL_DisplayMode **pModes  =SDL_GetFullscreenDisplayModes(displayId, &numModes);
+    SDL_DisplayMode **pModes  =SDL_GetFullscreenDisplayModes(displayId, &numModes);
     if(pModes == NULL)
     {
       return  false;

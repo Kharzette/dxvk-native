@@ -51,10 +51,12 @@ namespace dxvk::wsi {
 
     // TODO: Implement lookup format for bitsPerPixel here.
 
-    const SDL_DisplayMode *pCMode =SDL_GetClosestFullscreenDisplayMode(displayId, pMode->width, pMode->height,
-          pMode->refreshRate.numerator / pMode->refreshRate.denominator, false);
+    SDL_DisplayMode *pCMode;
+    
+    bool  bSuccess  =SDL_GetClosestFullscreenDisplayMode(displayId, pMode->width, pMode->height,
+          pMode->refreshRate.numerator / pMode->refreshRate.denominator, false, pCMode);
           
-    if(pCMode == NULL) {
+    if(pCMode == NULL || !bSuccess) {
       Logger::err(str::format("SDL2 WSI: setWindowMode: SDL_GetClosestDisplayMode: ", SDL_GetError()));
       return false;
     }

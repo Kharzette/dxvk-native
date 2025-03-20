@@ -1,4 +1,4 @@
-project('dxvk', ['c', 'cpp'], version : 'v1.9.2', meson_version : '>= 0.51')
+project('dxvk', ['c', 'cpp'], version : 'v1.9.2', meson_version : '>= 0.46')
 
 cpu_family = target_machine.cpu_family()
 
@@ -63,8 +63,6 @@ dxvk_extradep = [ ]
 dxvk_platform = 'windows'
 dxvk_wsi      = 'win32'
 so_prefix     = 'dxvk_'
-src_dir       = meson.current_source_dir()
-SDL_lib_path  = join_paths(src_dir, '../SDL/build')
 
 if not dxvk_native
   if dxvk_compiler.get_id() == 'msvc'
@@ -136,18 +134,14 @@ else
   endif
 
   if dxvk_platform == 'windows'
-    dxvk_include_path = include_directories('./include', './include/native/', '../SDL/include')
+    dxvk_include_path = include_directories('./include', './include/native/')
     lib_vulkan  = dxvk_compiler.find_library('vulkan-1', dirs : dxvk_library_path)
-    lib_sdl3    = dxvk_compiler.find_library('SDL3', dirs : SDL_lib_path)
+    lib_sdl3    = dxvk_compiler.find_library('SDL3',     dirs : dxvk_library_path)
     wrc = find_program('rc')
   else
-#    add_global_link_arguments('-static', '-static-libgcc', language: 'c')
-#    add_global_link_arguments('-static', '-static-libgcc', '-static-libstdc++', language: 'cpp')
-    dxvk_include_path = include_directories('./include', './include/native/', './include/native/windows', './include/native/directx', '../SDL/include')
-    SDL_include_path = include_directories('../SDL/include')
+    dxvk_include_path = include_directories('./include', './include/native/', './include/native/windows', './include/native/directx')
     lib_vulkan  = dxvk_compiler.find_library('vulkan')
-#    lib_sdl2    = dxvk_compiler.find_library('SDL3', dirs : SDL_lib_path, static : true)
-    lib_sdl3    = dxvk_compiler.find_library('SDL3', dirs : SDL_lib_path)
+    lib_sdl3    = dxvk_compiler.find_library('SDL3')
     wrc = find_program('echo')
     so_prefix = 'libdxvk_'
   endif
@@ -190,3 +184,9 @@ dxvk_version = vcs_tag(
   output: 'version.h')
 
 subdir('src')
+
+enable_tests = get_option('enable_tests')
+
+if enable_tests
+  subdir('tests')
+endif
