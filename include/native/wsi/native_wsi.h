@@ -4,6 +4,8 @@
 #error You shouldnt be using this code path.
 #elif DXVK_WSI_SDL2
 #include "wsi/native_sdl2.h"
+#elif DXVK_WSI_SDL3
+#include "wsi/native_sdl3.h"
 #else
 #error Unknown wsi!
 #endif
