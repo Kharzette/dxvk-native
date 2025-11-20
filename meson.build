@@ -131,6 +131,8 @@ else
     if dxvk_compiler.has_argument('-mfpmath=sse')
       add_project_arguments('-mfpmath=sse', language: ['c', 'cpp'])
     endif
+  else
+    add_project_arguments('-march=armv8-a+fp+simd', language: ['c', 'cpp'])
   endif
 
   if dxvk_platform == 'windows'
@@ -140,7 +142,7 @@ else
     lib_sdl3    = dxvk_compiler.find_library('SDL3',     dirs : dxvk_library_path)
     wrc = find_program('rc')
   else
-    dxvk_include_path = include_directories('./include', './include/native/', './include/native/windows', './include/native/directx')
+    dxvk_include_path = include_directories('./include', './include/native/', './include/native/windows', './include/native/directx', './sse2neon')
     lib_vulkan  = dxvk_compiler.find_library('vulkan')
     lib_sdl2    = dxvk_compiler.find_library('SDL2')
     lib_sdl3    = dxvk_compiler.find_library('SDL3')

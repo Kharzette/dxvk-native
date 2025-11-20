@@ -5,7 +5,13 @@
 #pragma push_macro("_WIN32")
 #undef _WIN32
 #endif
+
+#if defined(__ARM_NEON)
+#include <sse2neon.h>
+#else
 #include <x86intrin.h>
+#endif
+
 #if defined(__WINE__) && defined(__clang__)
 #pragma pop_macro("_WIN32")
 #endif
@@ -56,7 +62,7 @@ namespace dxvk::bit {
     return _tzcnt_u32(n);
     #elif defined(__BMI__)
     return __tzcnt_u32(n);
-    #elif defined(__GNUC__) || defined(__clang__)
+    #elif !defined(__ARM_NEON) && (defined(__GNUC__) || defined(__clang__))
     uint32_t res;
     uint32_t tmp;
     asm (
