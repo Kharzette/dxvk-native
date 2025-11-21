@@ -131,7 +131,7 @@ else
     if dxvk_compiler.has_argument('-mfpmath=sse')
       add_project_arguments('-mfpmath=sse', language: ['c', 'cpp'])
     endif
-  else
+  elif cpu_family == 'aarch64'
     add_project_arguments('-march=armv8-a+fp+simd', language: ['c', 'cpp'])
   endif
 
